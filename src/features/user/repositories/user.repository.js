@@ -57,6 +57,22 @@ class UserRepository {
       throw new DatabaseError(err.code);
     }
   }
+
+  async findAll({ where, select, skip, take, orderBy }) {
+    try {
+      return await this.prismaService.user.findMany({ where, select, skip, take, orderBy });
+    } catch (err) {
+      throw new DatabaseError(err.code);
+    }
+  }
+
+  async count({ where }) {
+    try {
+      return await this.prismaService.user.count({ where });
+    } catch (err) {
+      throw new DatabaseError(err.code);
+    }
+  }
 }
 
 export default UserRepository;

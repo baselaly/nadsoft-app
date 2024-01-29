@@ -1,5 +1,7 @@
 import ErrorClass from "../../../common/classes/error.class.js";
 import StatusCodeEnum from "../../../common/enums/statusCode.enum.js";
+import DatabaseOrderByEnum from "../../../common/enums/databaseOrderBy.enum.js";
+import { getTakeAndSkipPaginationOptions, getTotalPageNumbers } from "../../../common/utils/helper.util.js";
 import UserRepository from "../repositories/user.repository.js";
 
 class UserService {
@@ -69,6 +71,25 @@ class UserService {
     }
 
     return await this.userRepository.delete({ select: { id: true }, where });
+  }
+
+  async findAll(paginationData) {
+    // prepare take, skip option for query
+    const { take, skip } = getTakeAndSkipPaginationOptions(paginationData.page, paginationData.perPage);
+
+    const users = await this.userRepository.findAll({
+      take,
+      skip,
+      select: { id: true, name: true, email: true, country: true, mobile: true, age: true },
+      orderBy: { createdAt: DatabaseOrderByEnum.DESC },
+    });
+
+    // countr users to calculate total pages number
+    const usersCount = await this.userRepository.count({});
+
+    const totalPages = getTotalPageNumbers(usersCount, paginationData.perPage);
+
+    return { totalPages, users };
   }
 }
 

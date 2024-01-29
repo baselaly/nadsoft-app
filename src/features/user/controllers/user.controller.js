@@ -1,4 +1,5 @@
 import StatusCodeEnum from "../../../common/enums/statusCode.enum.js";
+import UserSerializer from "../serializers/user.serializer.js";
 import UserService from "../services/user.service.js";
 
 class UserController {
@@ -51,6 +52,21 @@ class UserController {
       const data = await this.userService.delete(req.params.id);
 
       res.sendSuccess({ data, message: "user deleted successfully" });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async findAll(req, res, next) {
+    try {
+      let { users, totalPages } = await this.userService.findAll(req.query);
+
+      // serialize users list
+      const serializedUsers = UserSerializer.serializeUsersList(users);
+
+      const data = { totalPages, users: serializedUsers };
+
+      res.sendSuccess({ data, message: "success" });
     } catch (err) {
       next(err);
     }
