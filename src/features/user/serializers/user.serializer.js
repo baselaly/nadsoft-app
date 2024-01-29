@@ -6,6 +6,7 @@ export default class UserSerializer {
       email: user.email,
       country: user.country,
       mobile: user.mobile,
+      age: user.age,
     };
   }
 
