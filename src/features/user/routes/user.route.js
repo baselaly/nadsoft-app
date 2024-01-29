@@ -1,6 +1,7 @@
 import express from "express";
 import UserController from "../controllers/user.controller.js";
 import validationMiddleware from "../../../common/middlewares/validation.middleware.js";
+import parsePaginationQueryMiddleware from "../../../common/middlewares/parsePaginationQuery.middleware.js";
 import userSchema from "../schemas/user.schema.js";
 import idSchema from "../schemas/id.schema.js";
 
@@ -35,6 +36,8 @@ class UserRoute {
       validationMiddleware(idSchema, "params"),
       this.userController.delete.bind(this.userController)
     );
+
+    this.router.get("/", parsePaginationQueryMiddleware, this.userController.findAll.bind(this.userController));
   }
 }
 
