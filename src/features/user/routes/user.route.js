@@ -4,17 +4,18 @@ import validationMiddleware from "../../../common/middlewares/validation.middlew
 import parsePaginationQueryMiddleware from "../../../common/middlewares/parsePaginationQuery.middleware.js";
 import userSchema from "../schemas/user.schema.js";
 import idSchema from "../schemas/id.schema.js";
+import basicAuthMiddleware from "../../../common/middlewares/basicAuth.middleware.js";
 
 class UserRoute {
-  constructor(userController) {
+  constructor(userController = UserController.getInstance()) {
     this.router = express.Router();
     this.userController = userController;
     this.setupRoutes();
   }
 
-  static getInstance(userController = UserController.getInstance()) {
+  static getInstance() {
     if (!this.instance) {
-      this.instance = new UserRoute(userController);
+      this.instance = new UserRoute();
     }
 
     return this.instance;
@@ -37,7 +38,12 @@ class UserRoute {
       this.userController.delete.bind(this.userController)
     );
 
-    this.router.get("/", parsePaginationQueryMiddleware, this.userController.findAll.bind(this.userController));
+    this.router.get(
+      "/",
+      basicAuthMiddleware,
+      parsePaginationQueryMiddleware,
+      this.userController.findAll.bind(this.userController)
+    );
   }
 }
 
