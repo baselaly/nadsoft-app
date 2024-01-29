@@ -49,6 +49,14 @@ class UserRepository {
       throw new DatabaseError(err.code);
     }
   }
+
+  async delete({ select, where }) {
+    try {
+      return await this.prismaService.user.delete({ where, select });
+    } catch (err) {
+      throw new DatabaseError(err.code);
+    }
+  }
 }
 
 export default UserRepository;

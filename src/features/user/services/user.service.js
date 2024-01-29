@@ -40,7 +40,9 @@ class UserService {
   }
 
   async update(userId, data) {
-    const user = await this.userRepository.findOne({ select: { id: true }, where: { id: userId } });
+    const where = { id: userId };
+
+    const user = await this.userRepository.findOne({ select: { id: true }, where });
 
     if (!user) {
       throw new ErrorClass(StatusCodeEnum.NOT_FOUND, "user not found");
@@ -54,9 +56,19 @@ class UserService {
       mobile: data.mobile,
     };
 
+    return await this.userRepository.update({ data: userData, select: { id: true }, where });
+  }
+
+  async delete(userId) {
     const where = { id: userId };
 
-    return await this.userRepository.update({ data: userData, select: { id: true }, where });
+    const user = await this.userRepository.findOne({ select: { id: true }, where });
+
+    if (!user) {
+      throw new ErrorClass(StatusCodeEnum.NOT_FOUND, "user not found");
+    }
+
+    return await this.userRepository.delete({ select: { id: true }, where });
   }
 }
 
