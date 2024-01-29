@@ -29,6 +29,12 @@ class UserRoute {
       validationMiddleware(userSchema),
       this.userController.update.bind(this.userController)
     );
+
+    this.router.delete(
+      "/:id",
+      validationMiddleware(idSchema, "params"),
+      this.userController.delete.bind(this.userController)
+    );
   }
 }
 

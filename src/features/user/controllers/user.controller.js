@@ -1,3 +1,4 @@
+import StatusCodeEnum from "../../../common/enums/statusCode.enum.js";
 import UserService from "../services/user.service.js";
 
 class UserController {
@@ -29,7 +30,7 @@ class UserController {
     try {
       const data = await this.userService.create(req.body);
 
-      res.sendSuccess({ data, message: "user created successfully" });
+      res.sendSuccess({ data, statusCode: StatusCodeEnum.CREATED, message: "user created successfully" });
     } catch (err) {
       next(err);
     }
@@ -40,6 +41,16 @@ class UserController {
       const data = await this.userService.update(req.params.id, req.body);
 
       res.sendSuccess({ data, message: "user updated successfully" });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async delete(req, res, next) {
+    try {
+      const data = await this.userService.delete(req.params.id);
+
+      res.sendSuccess({ data, message: "user deleted successfully" });
     } catch (err) {
       next(err);
     }
