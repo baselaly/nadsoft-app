@@ -19,9 +19,20 @@ model User {
   mobile              String @db.VarChar(100) @unique
   age                 Int
 
+  countryId           String
+  country             Country @relation(fields: [countryId], references: [code])
+
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 
   @@index([email, mobile])
   @@map(name:"users")
 }
+
+model Country {
+  name                String @db.VarChar(250)
+  code                String @db.VarChar(255) @unique
+} 
+
+
+
